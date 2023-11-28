@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUpdateSupport;
 use App\Models\Support;
-use Illuminate\Http\Request;
 
 class SupportController extends Controller
 {
@@ -31,9 +31,9 @@ class SupportController extends Controller
         return view('admin.supports.create');
     }
 
-    public function store(Request $request, Support $support)
+    public function store(StoreUpdateSupport $request, Support $support)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $data['status'] = 'a';
 
         $support->create($data);
@@ -52,7 +52,7 @@ class SupportController extends Controller
         return view('admin.supports.edit', compact('supportEditted'));
     }
 
-    public function update(string|int $id, Support $support, Request $request)
+    public function update(string|int $id, Support $support, StoreUpdateSupport $request)
     {
         $supportToEdit = $support->find($id);
 
@@ -60,7 +60,20 @@ class SupportController extends Controller
             return redirect()->back();
         };
 
-        $supportToEdit->update($request->only(['subject', 'body']));
+        $supportToEdit->update($request->validated());
+
+        return redirect()->route('supports.index');
+    }
+
+    public function destroy(string|int $id, Support $support)
+    {
+        $supportToDestroy = $support->find($id);
+
+        if (!$supportToDestroy) {
+            return redirect()->back();
+        };
+
+        $supportToDestroy->delete();
 
         return redirect()->route('supports.index');
     }

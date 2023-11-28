@@ -5,6 +5,7 @@ use App\Http\Controllers\Site\SiteController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::delete('/supports/{id}', [SupportController::class, 'destroy'])->name('supports.destroy');
 Route::put('/supports/{id}', [SupportController::class, 'update'])->name('supports.update');
 Route::post('/supports', [SupportController::class, 'store'])->name('supports.store');
 Route::get('/supports', [SupportController::class, 'index'])->name('supports.index');
